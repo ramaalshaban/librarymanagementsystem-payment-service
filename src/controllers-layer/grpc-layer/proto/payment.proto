@@ -1,0 +1,96 @@
+
+syntax = "proto3";
+
+package payment;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+message fee {
+    string id = 1;
+    string userId = 2;
+    string loanId = 3;
+    double amount = 4;
+    string currency = 5;
+    int32 status = 6;
+    google.protobuf.Timestamp statusUpdateDate = 7;
+    string reason = 8;
+    string note = 9;
+}
+message feePayment {
+    string id = 1;
+    string feeId = 2;
+    double amountPaid = 3;
+    string currency = 4;
+    string userId = 5;
+    int32 paymentMethod = 6;
+    int32 paymentStatus = 7;
+    google.protobuf.Timestamp paymentDate = 8;
+    string stripePaymentIntentId = 9;
+    string handledByUserId = 10;
+    string note = 11;
+}
+message feeEvent {
+    string id = 1;
+    string feeId = 2;
+    int32 eventType = 3;
+    google.protobuf.Timestamp eventDate = 4;
+    string actorUserId = 5;
+    string note = 6;
+}
+message feePayment {
+    string id = 1;
+    string ownerId = 2;
+    string orderId = 3;
+    string paymentId = 4;
+    string paymentStatus = 5;
+    string statusLiteral = 6;
+    string redirectUrl = 7;
+}
+message paymentCustomer {
+    string id = 1;
+    string userId = 2;
+    string customerId = 3;
+    string platform = 4;
+}
+message paymentMethod {
+    string id = 1;
+    string paymentMethodId = 2;
+    string userId = 3;
+    string customerId = 4;
+    string cardHolderName = 5;
+    string cardHolderZip = 6;
+    string platform = 7;
+    google.protobuf.Struct cardInfo = 8;
+}
+
+
+
+
+
+
+
+
+
+message VoidRequest {}
+
+message CurrentUserReply {
+    string userId = 1;
+    string sessionId = 2;
+    string fullname = 3;
+    string email = 4;
+    string roleId = 5;
+    string avatar = 6;
+    bool emailVerified = 7;
+        string mobile = 8;
+    bool mobileVerified = 9;        repeated string userGroupNames = 10;
+    repeated string userGroupIdList = 11;string accessToken = 12;
+}
+
+message HelloMessageReply {
+    string hello = 1;
+}
+
+service paymentService {
+    rpc currentUser(VoidRequest) returns (CurrentUserReply);
+    rpc helloMessage(VoidRequest) returns (HelloMessageReply);
+}

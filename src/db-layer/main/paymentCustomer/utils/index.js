@@ -1,0 +1,16 @@
+module.exports = {
+  createPaymentCustomer: require("./createPaymentCustomer"),
+  getIdListOfPaymentCustomerByField: require("./getIdListOfPaymentCustomerByField"),
+  getPaymentCustomerById: require("./getPaymentCustomerById"),
+  getPaymentCustomerAggById: require("./getPaymentCustomerAggById"),
+  getPaymentCustomerListByQuery: require("./getPaymentCustomerListByQuery"),
+  getPaymentCustomerStatsByQuery: require("./getPaymentCustomerStatsByQuery"),
+  getPaymentCustomerByQuery: require("./getPaymentCustomerByQuery"),
+  updatePaymentCustomerById: require("./updatePaymentCustomerById"),
+  updatePaymentCustomerByIdList: require("./updatePaymentCustomerByIdList"),
+  updatePaymentCustomerByQuery: require("./updatePaymentCustomerByQuery"),
+  deletePaymentCustomerById: require("./deletePaymentCustomerById"),
+  deletePaymentCustomerByQuery: require("./deletePaymentCustomerByQuery"),
+  getPaymentCustomerByUserId: require("./getPaymentCustomerByUserId"),
+  getPaymentCustomerByCustomerId: require("./getPaymentCustomerByCustomerId"),
+};

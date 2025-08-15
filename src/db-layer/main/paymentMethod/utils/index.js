@@ -1,0 +1,17 @@
+module.exports = {
+  createPaymentMethod: require("./createPaymentMethod"),
+  getIdListOfPaymentMethodByField: require("./getIdListOfPaymentMethodByField"),
+  getPaymentMethodById: require("./getPaymentMethodById"),
+  getPaymentMethodAggById: require("./getPaymentMethodAggById"),
+  getPaymentMethodListByQuery: require("./getPaymentMethodListByQuery"),
+  getPaymentMethodStatsByQuery: require("./getPaymentMethodStatsByQuery"),
+  getPaymentMethodByQuery: require("./getPaymentMethodByQuery"),
+  updatePaymentMethodById: require("./updatePaymentMethodById"),
+  updatePaymentMethodByIdList: require("./updatePaymentMethodByIdList"),
+  updatePaymentMethodByQuery: require("./updatePaymentMethodByQuery"),
+  deletePaymentMethodById: require("./deletePaymentMethodById"),
+  deletePaymentMethodByQuery: require("./deletePaymentMethodByQuery"),
+  getPaymentMethodByPaymentMethodId: require("./getPaymentMethodByPaymentMethodId"),
+  getPaymentMethodByUserId: require("./getPaymentMethodByUserId"),
+  getPaymentMethodByCustomerId: require("./getPaymentMethodByCustomerId"),
+};

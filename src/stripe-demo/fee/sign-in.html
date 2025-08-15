@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <link rel="stylesheet" href="prism.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="output.css" />
+    <title>Login</title>
+
+    <script>
+      function login(e) {
+        e.preventDefault();
+        fetch("/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: e.target.email.value,
+            password: e.target.password.value,
+          }),
+        }).then((r) => {
+          if (r.ok) {
+            window.location.href = "/index.html";
+            return;
+          }
+        });
+      }
+    </script>
+  </head>
+
+  <body>
+    <div
+      class="grid grid-cols-2 w-full bg-white rounded-lg overflow-hidden h-screen"
+    >
+      <!-- Login Form -->
+
+      <div
+        class="flex flex-col justify-center items-center bg-[#EEEEEE] p-10 w-full"
+      >
+        <div class="w-full max-w-sm bg-white rounded-md shadow-lg">
+          <div class="flex justify-center items-center border-b py-6">
+            <div class="flex justify-center items-center gap-2 text-[#545454]">
+              <img
+                src="https://www.babil.com/Themes/BabilThemeV2/Content/images/babil-logo.svg"
+                class="w-[25px] h-[25px] border rounded p-1"
+                alt="Project Logo"
+              />
+              <span class="text-sm font-bold"
+                >BabilShop<span class="font-light">Project</span></span
+              >
+            </div>
+          </div>
+
+          <form onsubmit="login(event)" class="flex flex-col p-10">
+            <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+            <input
+              name="email"
+              type="email"
+              placeholder="E-Mail"
+              class="border rounded-md w-full py-2 px-3 mb-5 focus:outline-none leading-tight"
+            />
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              class="border rounded-md w-full py-2 px-3 mb-3 focus:outline-none leading-tight"
+            />
+            <p class="text-xs text-right text-gray-500 mb-5 cursor-pointer">
+              Forgot Password
+            </p>
+
+            <button
+              type="submit"
+              class="bg-black text-white w-full border py-3 rounded-md text-sm"
+            >
+              Sign in with Email
+            </button>
+
+            <a
+              href="sign-up.html"
+              class="text-center block my-4 text-sm hover:underline"
+              >Create Account</a
+            >
+
+            <div class="flex items-center my-4">
+              <div class="flex-1 border-t"></div>
+              <div class="px-3 text-xs">Or</div>
+              <div class="flex-1 border-t"></div>
+            </div>
+            <button class="w-full border py-3 rounded-md text-sm">
+              Test Social Logins
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Section -->
+
+      <div class="overflow-scroll">
+        <div class="flex flex-col gap-5 p-10">
+          <h2 class="text-2xl font-bold">Consuming backend authentication</h2>
+
+          <div class="flex flex-col gap-2">
+            <h3 class="text-base font-bold">
+              How to consume backend sign in feature in frontend code
+            </h3>
+
+            <p class="text-sm text-gray-600">
+              Here's a Node.js backend class to complement the frontend
+              SessionManager. This backend class handles JWT generation, Google
+              token verification, and refresh token management using Express.js.
+              You'll need to install the required dependencies first.
+            </p>
+            <p class="text-sm text-gray-600">
+              First, install these dependencies:
+            </p>
+          </div>
+
+          <pre>
+          <code class="language-js">
+            const updateIssueItemIssueItemUserData = async (data, isDeleted) => {
+              try {
+                const params = {
+                  dataObject: isDeleted
+                    ? {
+                        id: data.id,
+                      }
+                    : {
+                        id: data["id"],
+                        fullname: data["fullname"],
+                        avatar: data["avatar"],
+                        mecellemUserId: data["mecellemUserId"],
+                        mecellemUserName: data["mecellemUserName"],
+                      },
+                  isDeleted: isDeleted ?? false,
+                  id: data.id,zxczxc
+                  localKey: data.id,
+                };
+          </code>
+        </pre>
+
+          <div class="flex flex-col gap-2">
+            <h3 class="text-base font-bold">
+              How to consume backend sign in feature in frontend code
+            </h3>
+
+            <p class="text-sm text-gray-600">
+              Here's a Node.js backend class to complement the frontend
+              SessionManager. This backend class handles JWT generation, Google
+              token verification, and refresh token management using Express.js.
+              You'll need to install the required dependencies first.
+            </p>
+            <p class="text-sm text-gray-600">
+              First, install these dependencies:
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <h3 class="text-base font-bold">
+              How to consume backend sign in feature in frontend code
+            </h3>
+
+            <p class="text-sm text-gray-600">
+              Here's a Node.js backend class to complement the frontend
+              SessionManager. This backend class handles JWT generation, Google
+              token verification, and refresh token management using Express.js.
+              You'll need to install the required dependencies first.
+            </p>
+            <p class="text-sm text-gray-600">
+              First, install these dependencies:
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <script src="https://js.stripe.com/v3/?advancedFraudSignals=false"></script>
+    <link rel="stylesheet" href="lib/styles.css?" />
+    <link rel="stylesheet" href="lib/output.css?" />
+    <script src="lib/toastify.js?"></script>
+    <script src="lib/utils.js?"></script>
+    <title>Select Payment Method</title>
+  </head>
+
+  <script>
+    let defaultPaymentMethodId = undefined;
+
+    let currentPaymentIntent = undefined;
+
+    function fetchPaymentMethods(selectedId) {
+      return fetch("$serviceUrl/user-payment-methods?", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((r) => {
+          if (r.ok) {
+            return r.json();
+          }
+          throw new Error("Failed to fetch payment methods");
+        })
+        .then((paymentMethods) => {
+          console.log("Payment Methods:", paymentMethods);
+          const methods = paymentMethods;
+          return methods.map((method) => {
+            const cardImage = getBrandImage(method.cardInfo.brand);
+            return {
+              id: method.paymentMethodId,
+              name: method.cardHolderName,
+              number: `**** **** **** ${method.cardInfo.last4}`,
+              exp: `${method.cardInfo.exp_month}/${method.cardInfo.exp_year}`,
+              img: cardImage,
+              selected: selectedId
+                ? method.paymentMethodId === selectedId
+                : method.paymentMethodId === defaultPaymentMethodId,
+            };
+          });
+        });
+    }
+
+    async function deleteCard(paymentMethodId) {
+      return fetch(`$serviceUrl/delete-payment-method/${paymentMethodId}?`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+
+    function selectCard(event) {
+      const cardElement = event.target.closest("[data-id]");
+      if (!cardElement) return;
+
+      const paymentMethodId = cardElement.getAttribute("data-id");
+      refetchPaymentMethods(paymentMethodId);
+    }
+
+    async function confirmPayment(paymentIntentInfo, paymentMethodId) {
+      console.log("confirming payment intent");
+      const stripe = Stripe(paymentIntentInfo.publicKey);
+      const { paymentIntent, error } = await stripe.confirmCardPayment(
+        paymentIntentInfo.clientSecret,
+        {
+          payment_method: paymentMethodId,
+        },
+      );
+      if (error) {
+        console.log("error....", error);
+        showToast(
+          error.code + ":" + error.message,
+          "fa-circle-xmark text-red-500",
+        );
+        throw new Error(error.message);
+      }
+      return paymentIntent;
+    }
+
+    async function handlePayment(paymentMethodId) {
+      if (currentPaymentIntent) {
+        return await confirmPayment(currentPaymentIntent, paymentMethodId);
+      }
+
+      const orderId = new URLSearchParams(window.location.search).get(
+        "orderId",
+      );
+      const response = await fetch(
+        `$serviceUrl/startcheckout/fee/${orderId}?`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          // TODO: ! IMPORTANT - amount MUST NOT handled on client side
+          body: JSON.stringify({
+            paymentUserParams: {
+              paymentMethodId,
+              return_url: `$serviceUrl/stripe-demo/fee/payment-result.html?orderId=${orderId}&`,
+            },
+          }),
+        },
+      );
+
+      const resultData = await response.json();
+      if (response.ok) {
+        const paymentIntentInfo = resultData.checkoutResult?.paymentIntentInfo;
+        if (
+          paymentIntentInfo.requires_action ||
+          paymentIntentInfo.requires_confirmation
+        ) {
+          currentPaymentIntent = paymentIntentInfo;
+          const paymentIntent = await confirmPayment(paymentIntentInfo);
+          return paymentIntent;
+        } else if (paymentIntentInfo.requires_redirect) {
+          window.location.href = paymentIntentInfo.redirectToUrl;
+          throw new Error("Redirecting");
+        } else {
+          return paymentIntentInfo;
+        }
+      } else {
+        if (resultData.result == "ERR") {
+          showToast(resultData.message, "fa-circle-xmark text-red-500");
+        } else {
+          showToast("Failed to start checkout", "fa-circle-xmark text-red-500");
+        }
+        throw new Error("Failed to start checkout");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // fetch("/customer", {
+      //   method: "GET",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // })
+      //   .then((r) => {
+      //     if (r.ok) {
+      //       return r.json();
+      //     }
+      //     //window.location.href = "unauthorized.html";
+      //   })
+      //   .then((user) => {
+      //     defaultPaymentMethodId = user.customer.invoice_settings.default_payment_method;
+      //     refetchPaymentMethods();
+      //   });
+
+      const cardContainer = document.getElementById("card-container");
+
+      function renderCards(paymentMethods) {
+        if (!paymentMethods.length) {
+          cardContainer.innerHTML = `<div class="flex justify-center items-center min-h-[40vh]">
+              <p class="text-xl font-bold text-center">No payment methods found.</p>
+            </div>`;
+          return;
+        }
+
+        cardContainer.innerHTML = paymentMethods
+          .map(
+            (card) => `
+          <div
+            name="method"
+          class="grid grid-cols-6 items-center py-3 px-6 rounded-full cursor-pointer ${
+            card.selected
+              ? "bg-[#F3F1F8] border border-[#8C79C9]"
+              : "bg-white border"
+          }" data-id="${card.id}" data-selected="${card.selected}">
+            <div class='col-span-2 flex items-center gap-3'>
+              <img src="images/${card.img}?" alt="card" class="w-10 h-10 p-2" />
+              <p class="text-xs font-light">${card.number}</p>
+            </div>
+            <p class="col-span-2 font-bold text-xs">${card.name}</p>
+            <p class="font-light text-xs">${card.exp}</p>
+            <button onclick="" class='delete-card flex items-center gap-2' data-id="${card.id}">
+              <i class="fa-solid fa-trash text-sm text-gray-400"></i>
+              <span class='font-light text-xs'>Remove</span>
+            </button>
+          </div>`,
+          )
+          .join("");
+      }
+
+      function refetchPaymentMethods(selectedId) {
+        const cardContainer = document.getElementById("card-container");
+        fetchPaymentMethods(selectedId).then((paymentMethods) => {
+          renderCards(paymentMethods);
+        });
+      }
+
+      cardContainer.addEventListener("click", (event) => {
+        const cardElement = event.target.closest("[data-id]");
+        if (!cardElement) return;
+
+        const paymentMethodId = cardElement.getAttribute("data-id");
+
+        if (event.target.closest(".delete-card")) {
+          deleteCard(paymentMethodId).then(() => {
+            refetchPaymentMethods();
+            showToast(
+              "Payment method removed successfully!",
+              "fa-circle-check text-green-500",
+            );
+          });
+          return;
+        }
+
+        refetchPaymentMethods(paymentMethodId);
+      });
+
+      const addButton = document.getElementById("add-method-button");
+      addButton.addEventListener("click", () => {
+        console.log("Add new payment method clicked");
+        const orderId = new URLSearchParams(window.location.search).get(
+          "orderId",
+        );
+        window.location.href = `create-new-payment-method.html?orderId=${orderId}&`;
+      });
+
+      document
+        .getElementById("pay-button")
+        .addEventListener("click", async () => {
+          const selectedCard = cardContainer.querySelector(
+            "[data-selected='true']",
+          );
+
+          if (!selectedCard) {
+            showToast(
+              "Please select a payment method!",
+              "fa-circle-xmark text-red-500",
+            );
+            return;
+          }
+
+          const paymentMethodId = selectedCard.getAttribute("data-id");
+
+          const paymentIntent = await handlePayment(paymentMethodId);
+
+          if (paymentIntent && paymentIntent.status === "succeeded") {
+            showToast("Payment successful!", "fa-circle-check text-green-500");
+
+            const orderId = new URLSearchParams(window.location.search).get(
+              "orderId",
+            );
+
+            setTimeout(() => {
+              window.location.href = `payment-result.html?orderId=${orderId}&paymentId=${paymentIntent.id}&`;
+            }, 1000);
+          } else {
+            console.log("Payment failed", paymentIntent);
+            showToast("Payment failed!", "fa-circle-xmark text-red-500");
+          }
+        });
+
+      refetchPaymentMethods();
+    });
+  </script>
+
+  <body
+    class="bg-gray-200 h-dvh flex justify-center items-center text-[#545454]"
+  >
+    <main class="max-w-[90vw] lg:max-w-[50vw] w-full my-0 mx-auto">
+      <div
+        class="flex flex-col justify-center items-start bg-white rounded-lg overflow-hidden shadow-lg"
+      >
+        <!-- Header -->
+        <div
+          class="flex justify-between items-center gap-5 bg-[#F9F9F9] px-5 py-4 w-full"
+        >
+          <h1 class="flex justify-center items-center gap-2 font-bold text-md">
+            <i class="fa-solid fa-credit-card"></i>
+            Payment Test Page
+          </h1>
+
+          <div class="flex justify-center items-center gap-2 ml-auto">
+            <img
+              src="https://www.babil.com/Themes/BabilThemeV2/Content/images/babil-logo.svg"
+              class="w-[25px] h-[25px] border rounded p-1"
+              alt="Project Logo"
+            />
+            <span class="text-xs font-bold"
+              >BabilShop<span class="font-light"> Project</span></span
+            >
+          </div>
+
+          <div
+            class="flex justify-center items-center gap-2 py-2 px-4 text-xs bg-white rounded"
+          >
+            <i class="fa-solid fa-user"></i>
+            <span id="user-card">$userEmail</span>
+          </div>
+        </div>
+
+        <!-- Payment Selection -->
+        <div class="flex flex-col gap-5 w-full p-5">
+          <div class="flex justify-between items-center w-full">
+            <h2 class="text-lg font-bold text-black">Select Payment Method</h2>
+            <button
+              id="add-method-button"
+              type="button"
+              class="bg-black text-xs text-white px-4 py-2 rounded flex items-center gap-3"
+            >
+              <i class="fa-solid fa-plus"></i> New Payment Method
+            </button>
+          </div>
+          <div
+            class="flex flex-col gap-4 max-h-[40vh] h-full min-h-[40vh] overflow-scroll"
+            id="card-container"
+          >
+            <div class="flex justify-center items-center min-h-[40vh]">
+              <p class="text-xl font-bold text-center">Loading...</p>
+            </div>
+          </div>
+
+          <button
+            id="pay-button"
+            type="button"
+            class="bg-[#5A3CB6] text-sm text-white p-4 rounded-lg text-center w-full"
+          >
+            Pay Now
+          </button>
+        </div>
+
+        <!-- Footer -->
+        <div
+          class="flex justify-end items-center bg-[#F9F9F9] px-5 py-4 w-full"
+        >
+          <img src="images/mindbricks.svg?" alt="mindbricks" />
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

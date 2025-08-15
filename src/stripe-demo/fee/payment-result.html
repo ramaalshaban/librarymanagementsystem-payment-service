@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <link rel="stylesheet" href="lib/prism.css?" />
+    <link rel="stylesheet" href="lib/styles.css?" />
+    <link rel="stylesheet" href="lib/output.css?" />
+    <script src="lib/utils.js?"></script>
+
+    <title>Payment Successfull</title>
+
+    <script>
+      function getOrderIdFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("orderId");
+      }
+
+      function getPaymentIdFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get("paymentId") ?? urlParams.get("paymentIntentId");
+      }
+
+      async function refreshCheckout() {
+        const codeArea = document.getElementById("code-area");
+        try {
+          const orderId = getOrderIdFromURL();
+
+          if (!orderId) {
+            showToast(
+              "Order ID is missing in URL.",
+              "fa-circle-xmark text-red-500",
+            );
+            return;
+          }
+
+          const response = await fetch(
+            `$serviceUrl/refreshcheckout/fee/${orderId}?`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              // TODO: ! IMPORTANT - amount MUST NOT handled on client side
+              body: JSON.stringify({}),
+            },
+          );
+
+          if (!response.ok) {
+            throw new Error("Error fetching payment result");
+          }
+
+          const data = await response.json();
+          codeArea.innerText = JSON.stringify(data, null, 4);
+
+          const checkoutStatus = data[data.dataName].checkoutResult.status;
+
+          console.log("checkoutResult", checkoutResult);
+
+          const statusIcon =
+            checkoutStatus == "succeeded"
+              ? document.querySelector(".fa-circle-check")
+              : document.querySelector(".fa-circle-xmark");
+
+          const messaheHeader = document.getElementById("result-message");
+          messaheHeader.innerText =
+            checkoutStatus == "succeeded"
+              ? "Payment successful"
+              : "Payment failed";
+
+          statusIcon.classList.remove(
+            checkoutStatus == "succeeded" ? "text-red-500" : "text-green-500",
+          );
+          statusIcon.classList.add(
+            checkoutStatus == "succeeded" ? "text-green-500" : "text-red-500",
+          );
+        } catch (error) {
+          showToast("Error: " + error.message, "fa-circle-xmark text-red-500");
+        }
+      }
+      document.addEventListener("DOMContentLoaded", async () => {
+        refreshCheckout();
+      });
+    </script>
+  </head>
+
+  <body
+    class="bg-[#EEEEEE] h-dvh flex justify-center items-center text-[#545454]"
+  >
+    <main class="max-w-[90vw] lg:max-w-[50vw] w-full my-0 mx-auto">
+      <div
+        class="flex flex-col justify-center items-start bg-white rounded-lg overflow-hidden shadow-lg"
+      >
+        <div
+          class="flex justify-between items-center gap-5 bg-[#F9F9F9] px-5 py-4 w-full"
+        >
+          <h1 class="flex justify-center items-center gap-2 font-bold text-md">
+            <i class="fa-solid fa-credit-card"></i>
+            Payment Test Page
+          </h1>
+
+          <div class="flex justify-center items-center gap-2 ml-auto">
+            <img
+              src="https://www.babil.com/Themes/BabilThemeV2/Content/images/babil-logo.svg"
+              class="w-[25px] h-[25px] border rounded p-1"
+              alt="Project Logo"
+            />
+            <span class="text-xs font-bold"
+              >BabilShop<span class="font-light"> Project</span></span
+            >
+          </div>
+
+          <div
+            class="flex justify-center items-center gap-2 py-2 px-4 text-xs bg-white rounded"
+          >
+            <i class="fa-solid fa-user"></i>
+            <span id="user-card">$userEmail</span>
+          </div>
+        </div>
+
+        <div
+          class="flex flex-col justify-center items-center w-full p-5 gap-10 text-left"
+        >
+          <div class="flex flex-col gap-3 items-center mt-3">
+            <i
+              id="status-icon"
+              class="fa-solid fa-circle-check text-green-500 text-4xl"
+            ></i>
+            <h2
+              id="result-message"
+              class="text-2xl font-bold text-black text-center"
+            >
+              Payment successful
+            </h2>
+          </div>
+          <div
+            class="w-full h-[40vh] border border-[#8EC192] rounded-lg bg-[#ECF7ED] overflow-scroll"
+          >
+            <pre class="text-xs p-5 text-[#2C522F]">
+              <code id="code-area" class="language-js">
+                {
+                  "status": 0,
+                  "statusUpdateDate": ""
+                }
+              </code>
+            </pre>
+          </div>
+        </div>
+
+        <div
+          class="flex justify-end items-center bg-[#F9F9F9] px-5 py-4 w-full"
+        >
+          <img src="images/mindbricks.svg?" alt="mindbricks" />
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

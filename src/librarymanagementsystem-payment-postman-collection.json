@@ -1,0 +1,884 @@
+{
+  "info": {
+    "name": "librarymanagementsystem-payment-service API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "getFee",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//fees/:feeId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "fees",
+            ":feeId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "createFee",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"userId\": \"ID\",\n  \"loanId\": \"ID\",\n  \"amount\": \"Double\",\n  \"currency\": \"String\",\n  \"status\": \"Enum\",\n  \"statusUpdateDate\": \"Date\",\n  \"reason\": \"String\",\n  \"note\": \"Text\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{serviceUrl}}//fees",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "fees"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "updateFee",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"Enum\",\n  \"statusUpdateDate\": \"Date\",\n  \"note\": \"Text\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{serviceUrl}}//fees/:feeId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "fees",
+            ":feeId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "deleteFee",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//fees/:feeId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "fees",
+            ":feeId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "listFees",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//fees",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "fees"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "checkoutstartFee",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{serviceUrl}}//startcheckout/fee/:feeId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "startcheckout",
+            "fee",
+            ":feeId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "checkoutcompleteFee",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{serviceUrl}}//completecheckout/fee/:feeId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "completecheckout",
+            "fee",
+            ":feeId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "checkoutrefreshFee",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{serviceUrl}}//refreshcheckout/fee/:feeId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "refreshcheckout",
+            "fee",
+            ":feeId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getFeePayment",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//feepayments/:feePaymentId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "feepayments",
+            ":feePaymentId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "createFeePayment",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"feeId\": \"ID\",\n  \"amountPaid\": \"Double\",\n  \"currency\": \"String\",\n  \"userId\": \"ID\",\n  \"paymentMethod\": \"Enum\",\n  \"paymentStatus\": \"Enum\",\n  \"paymentDate\": \"Date\",\n  \"stripePaymentIntentId\": \"String\",\n  \"handledByUserId\": \"ID\",\n  \"note\": \"Text\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{serviceUrl}}//feepayments",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "feepayments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "updateFeePayment",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paymentStatus\": \"Enum\",\n  \"paymentDate\": \"Date\",\n  \"note\": \"Text\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{serviceUrl}}//feepayments/:feePaymentId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "feepayments",
+            ":feePaymentId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "deleteFeePayment",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//feepayments/:feePaymentId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "feepayments",
+            ":feePaymentId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "listFeePayments",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//feepayments",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "feepayments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getFeeEvent",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//feeevents/:feeEventId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "feeevents",
+            ":feeEventId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "createFeeEvent",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"feeId\": \"ID\",\n  \"eventType\": \"Enum\",\n  \"eventDate\": \"Date\",\n  \"actorUserId\": \"ID\",\n  \"note\": \"Text\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{serviceUrl}}//feeevents",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "feeevents"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "updateFeeEvent",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{serviceUrl}}//feeevents/:feeEventId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "feeevents",
+            ":feeEventId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "deleteFeeEvent",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//feeevents/:feeEventId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "feeevents",
+            ":feeEventId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "listFeeEvents",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//feeevents",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "feeevents"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getPayment",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//payment/:feePaymentId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "payment",
+            ":feePaymentId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getPaymentByOrderId",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//paymentbyorderid/:feePaymentId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "paymentbyorderid",
+            ":feePaymentId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getPaymentByPaymentId",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//paymentbypaymentid/:feePaymentId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "paymentbypaymentid",
+            ":feePaymentId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "createPayment",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": \"ID\",\n  \"paymentId\": \"String\",\n  \"paymentStatus\": \"String\",\n  \"statusLiteral\": \"String\",\n  \"redirectUrl\": \"String\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{serviceUrl}}//payment",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "payment"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "updatePayment",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"paymentId\": \"String\",\n  \"paymentStatus\": \"String\",\n  \"statusLiteral\": \"String\",\n  \"redirectUrl\": \"String\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{serviceUrl}}//payment/:feePaymentId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "payment",
+            ":feePaymentId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "listPayments",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//payments",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "deletePayment",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//payment/:feePaymentId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "payment",
+            ":feePaymentId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getCustomerByUserId",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//paymentcustomers/:userId",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "paymentcustomers",
+            ":userId"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "listCustomers",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//customers",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "customers"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "listethods",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "ExampleValue",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{serviceUrl}}//listethods",
+          "host": [
+            "{{serviceUrl}}"
+          ],
+          "path": [
+            "listethods"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

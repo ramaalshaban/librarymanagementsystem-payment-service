@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css"
+    />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <script src="https://js.stripe.com/v3/?advancedFraudSignals=false"></script>
+    <link rel="stylesheet" href="lib/output.css?" />
+    <link rel="stylesheet" href="lib/styles.css?" />
+
+    <script src="lib/toastify.js?"></script>
+    <script src="lib/utils.js?"></script>
+    <script>
+      const stripe = Stripe(
+        "pk_test_51POkqWP5uUv56CsejNXXrCjP7BOoqkuI0HqDrM6Jo0DFsHeio9Rbr2LFQ28QkKm4s28M9PdgUMMnMXXFHGdCWsT200khIHAjt4",
+      );
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const elements = stripe.elements();
+
+        const cardNumberElement = elements.create("cardNumber", {
+          style: {
+            base: {
+              color: "#545454",
+              fontSize: "16px",
+            },
+          },
+        });
+        cardNumberElement.mount("#card-number-element");
+
+        const cardExpiryElement = elements.create("cardExpiry", {
+          style: {
+            base: {
+              color: "#545454",
+              fontSize: "16px",
+            },
+          },
+        });
+        cardExpiryElement.mount("#card-expiry-element");
+
+        const cardCvcElement = elements.create("cardCvc", {
+          style: {
+            base: {
+              color: "#545454",
+              fontSize: "16px",
+            },
+          },
+        });
+        cardCvcElement.mount("#card-cvc-element");
+
+        const cardholderName = document.getElementById("cardholder-name");
+        const cardholderZip = document.getElementById("cardholder-zip");
+        const cardButton = document.getElementById("card-button");
+        const backButton = document.getElementById("back-button");
+
+        function getOrderIdFromURL() {
+          const urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get("orderId");
+        }
+
+        backButton.addEventListener("click", () => {
+          const orderId = getOrderIdFromURL();
+
+          if (!orderId) {
+            showToast(
+              "Order ID is missing in URL.",
+              "fa-circle-xmark text-red-500",
+            );
+            return;
+          }
+          window.location.href = `select-payment-method.html?orderId=${orderId}&`;
+        });
+
+        cardButton.addEventListener("click", async () => {
+          const orderId = getOrderIdFromURL();
+
+          if (!orderId) {
+            showToast(
+              "Order ID is missing in URL.",
+              "fa-circle-xmark text-red-500",
+            );
+            return;
+          }
+
+          showToast("Card is being saved...", "fa-spinner text-green-500");
+          cardButton.disabled = true;
+
+          const { paymentMethod, error } = await stripe.createPaymentMethod({
+            type: "card",
+            card: cardNumberElement,
+            billing_details: {
+              name: cardholderName.value,
+              address: {
+                postal_code: cardholderZip.value,
+              },
+            },
+          });
+
+          if (error) {
+            showToast(
+              "Error: " + error.message,
+              "fa-circle-xmark text-red-500",
+            );
+            cardButton.disabled = false;
+          } else {
+            const response = await fetch("/add-payment-method?", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ paymentMethodId: paymentMethod.id }),
+            });
+
+            if (response.ok) {
+              showToast(
+                "Card saved successfully",
+                "fa-circle-check text-green-500",
+              );
+              // cardNumberElement.clear();
+              // cardExpiryElement.clear();
+              // cardCvcElement.clear();
+              // cardholderName.value = "";
+              // cardholderZip.value = "";
+
+              setTimeout(() => {
+                window.location.href = `select-payment-method.html?orderId=${orderId}&`;
+              }, 1000);
+            } else {
+              showToast(
+                "Error: " + data.message,
+                "fa-circle-xmark text-red-500",
+              );
+            }
+            cardButton.disabled = false;
+          }
+        });
+
+        cardNumberElement.on("change", (event) => {
+          const cardBrand = event.brand;
+          const cardNumberElementDiv = document.getElementById(
+            "card-number-element",
+          );
+          cardNumberElementDiv.style.backgroundImage = `url(/images/${cardBrand}.png?)`;
+        });
+      });
+    </script>
+
+    <title>Create New Payment Method</title>
+  </head>
+
+  <body
+    class="bg-[#EEEEEE] h-dvh flex justify-center items-center text-[#545454]"
+  >
+    <main class="max-w-[90vw] lg:max-w-[50vw] w-full my-0 mx-auto">
+      <div
+        class="flex flex-col justify-center items-start bg-white rounded-lg overflow-hidden shadow-lg"
+      >
+        <!-- Header -->
+        <div
+          class="flex justify-between items-center gap-5 bg-[#F9F9F9] px-5 py-4 w-full"
+        >
+          <h1 class="flex justify-center items-center gap-2 font-bold text-md">
+            <i class="fa-solid fa-credit-card"></i>
+            Payment Test Page
+          </h1>
+
+          <div class="flex justify-center items-center gap-2 ml-auto">
+            <img
+              src="https://www.babil.com/Themes/BabilThemeV2/Content/images/babil-logo.svg"
+              class="w-[25px] h-[25px] border rounded p-1"
+              alt="Project Logo"
+            />
+            <span class="text-xs font-bold"
+              >BabilShop<span class="font-light"> Project</span></span
+            >
+          </div>
+
+          <div
+            class="flex justify-center items-center gap-2 py-2 px-4 text-xs bg-white rounded"
+          >
+            <i class="fa-solid fa-user"></i>
+            <span id="user-card">$userEmail</span>
+          </div>
+        </div>
+
+        <!-- Create New Payment Form -->
+        <div class="flex flex-col gap-5 w-full p-5">
+          <div class="flex justify-between items-center">
+            <h2 class="text-lg font-bold text-black" id="header">
+              Create New Payment Method
+            </h2>
+            <button
+              type="button"
+              class="bg-black text-xs text-white px-4 py-2 rounded flex items-center gap-3"
+              id="back-button"
+            >
+              <i class="fa-solid fa-arrow-left"></i>Back
+            </button>
+          </div>
+
+          <div class="flex flex-col m-auto text-[#545454] w-full">
+            <!-- <label for="card-element">Credit or debit card</label>
+            <div id="card-element" class="card_input"></div> -->
+
+            <label for="cardholder-name" class="font-bold mb-2"
+              >Cardholder name</label
+            >
+            <input
+              id="cardholder-name"
+              type="text"
+              class="border rounded-md w-full py-2 px-3 mb-5 focus:outline-none leading-tight"
+            />
+
+            <!-- <label for="cardholder-email" class=" font-bold mb-2">Cardholder email</label>
+            <input
+              id="cardholder-email"
+              type="email"
+              class="border rounded-md w-full px-4 py-2 mb-5 focus:outline-none"
+            />  -->
+
+            <label for="card-number-element" class="font-bold"
+              >Card number</label
+            >
+            <div
+              id="card-number-element"
+              class="border rounded-md w-full py-2 px-3 mb-5 mt-2 focus:outline-none"
+            ></div>
+
+            <div class="flex justify-between gap-5">
+              <div class="w-full">
+                <label for="card-expiry-element" class="font-bold"
+                  >Expiry date</label
+                >
+                <div
+                  id="card-expiry-element"
+                  class="border rounded-md w-full py-2 px-3 mb-5 mt-2 focus:outline-none"
+                ></div>
+              </div>
+
+              <div class="w-full">
+                <label for="card-cvc-element" class="font-bold">CVC</label>
+                <div
+                  id="card-cvc-element"
+                  class="border rounded-md w-full py-2 px-3 mb-5 mt-2 focus:outline-none"
+                ></div>
+              </div>
+
+              <div class="w-full">
+                <label for="cardholder-zip" class="font-bold">Zip code</label>
+                <input
+                  id="cardholder-zip"
+                  class="border rounded-md w-full py-2 px-3 mb-5 mt-2 focus:outline-none leading-tight"
+                  type="text"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            id="card-button"
+            class="bg-black text-sm text-white p-4 rounded-lg text-center w-full"
+          >
+            Save New Payment Method
+          </button>
+        </div>
+
+        <!-- Footer -->
+        <div
+          class="flex justify-end items-center bg-[#F9F9F9] px-5 py-4 w-full"
+        >
+          <img src="images/mindbricks.svg?" alt="mindbricks" />
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

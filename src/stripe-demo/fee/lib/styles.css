@@ -1,0 +1,40 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.ace-github-light-default {
+  --ace-constant: #e96f3f;
+  --ace-string: #55728d;
+  --ace-variable: #5c940d;
+}
+
+.ace-github-light-default .ace_constant {
+  color: var(--ace-constant) !important;
+}
+
+.ace-github-light-default .ace_string {
+  color: var(--ace-string) !important;
+}
+
+.ace-github-light-default .ace_variable {
+  color: var(--ace-variable) !important;
+}
+
+.toastify {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+}
+
+.toastify-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toastify-content i {
+  margin-right: 10px; /* İkon ile metin arasındaki boşluk */
+}

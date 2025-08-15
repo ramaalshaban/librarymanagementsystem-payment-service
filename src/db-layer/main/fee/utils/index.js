@@ -1,0 +1,15 @@
+module.exports = {
+  createFee: require("./createFee"),
+  getIdListOfFeeByField: require("./getIdListOfFeeByField"),
+  getFeeById: require("./getFeeById"),
+  getFeeAggById: require("./getFeeAggById"),
+  getFeeListByQuery: require("./getFeeListByQuery"),
+  getFeeStatsByQuery: require("./getFeeStatsByQuery"),
+  getFeeByQuery: require("./getFeeByQuery"),
+  updateFeeById: require("./updateFeeById"),
+  updateFeeByIdList: require("./updateFeeByIdList"),
+  updateFeeByQuery: require("./updateFeeByQuery"),
+  deleteFeeById: require("./deleteFeeById"),
+  deleteFeeByQuery: require("./deleteFeeByQuery"),
+  updateFeeOrderStatusById: require("./updateFeeOrderStatusById"),
+};
